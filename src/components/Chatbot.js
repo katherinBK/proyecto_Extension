@@ -6,7 +6,7 @@ const Chatbot = () => {
 
     useEffect(() => {
         // Initialize the chat with a welcome message
-        setMessages([{ sender: "bot", text: "Hello! How can I assist you today?" }]);
+        setMessages([{ sender: "bot", text: "Hola! Soy tu asistente de compras, doime, en que te puedo asistir hoy??" }]);
     }, []);
 
     const sendMessage = async () => {
