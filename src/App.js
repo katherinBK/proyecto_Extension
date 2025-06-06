@@ -34,8 +34,7 @@ const App = () => {
     }
 
     setColorMode(storedTheme)
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
-
+  }, [])
   return (
     <HashRouter>
       <Suspense
