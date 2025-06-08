@@ -16,6 +16,11 @@ const Login = React.lazy(() => import('./views/pages/login/Login'))
 const Register = React.lazy(() => import('./views/pages/register/Register'))
 const Page404 = React.lazy(() => import('./views/pages/page404/Page404'))
 const Page500 = React.lazy(() => import('./views/pages/page500/Page500'))
+const Graficos = React.lazy(() => import('./views/pages/Graficos/Barra'))
+const Graficos = React.lazy(() => import('./views/pages/Graficos/Circulo'))
+const Graficos = React.lazy(() => import('./views/pages/Graficos/Dona'))
+const Graficos = React.lazy(() => import('./views/pages/Graficos/Dona2'))
+
 const TabsPillsExample = React.lazy(() => import('./Proyecto/TabsPillsExample'))
 
 const App = () => {
@@ -50,6 +55,13 @@ const App = () => {
           <Route exact path="/register" name="Register Page" element={<Register />} />
           <Route exact path="/404" name="Page 404" element={<Page404 />} />
           <Route exact path="/500" name="Page 500" element={<Page500 />} />
+
+          <Route exact path="/Graficos" name="Barra" element={<Barra />} />
+          <Route exact path="/Graficos" name="Circulo" element={<Circulo />} />
+          <Route exact path="/Graficos" name="Dona" element={<Dona />} />
+          <Route exact path="/Graficos" name="Dona2" element={<Dona2 />} />
+          
+      
           <Route exact path="/tabspills" name="TabsPills" element={<TabsPillsExample />} />
           <Route path="*" name="Home" element={<DefaultLayout />} />
         </Routes>
