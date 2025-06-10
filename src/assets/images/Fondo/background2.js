@@ -12,3 +12,4 @@ document.addEventListener("DOMContentLoaded", function () {
     // Aseguramos que ocupe toda la altura
     body.style.minHeight = "100vh";
 });
+export default background2
