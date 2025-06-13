@@ -1,49 +1,50 @@
-javascript
-// 1. Obtiene el contexto del elemento canvas con el id 'doughnutChart'
-const ctxDoughnut = document.getElementById('doughnutChart').getContext('2d');
+import React, { useEffect, useRef, useState } from "react";
+import { Chart } from "chart.js/auto";
 
-// 2. Define los datos y configuraciones del gráfico de anillo (doughnut)
-const dataDoughnut = {
-  // Etiquetas que aparecerán en la leyenda y en las descripciones de los segmentos
-  labels: ['Rojo', 'Azul', 'Amarillo', 'Verde', 'Púrpura'],
-  datasets: [{
-    // Etiqueta del conjunto de datos
-    label: 'Distribución de Colores',
-    // Datos numéricos que determinan el tamaño de cada segmento del anillo
-    data: [12, 19, 3, 5, 2],
-    // Colores de fondo para cada segmento del anillo
-    backgroundColor: ['#800000', '#000080', '#808000', '#008000', '#800080'],
-    // Desplazamiento al pasar el cursor sobre un segmento
-    hoverOffset: 4
-  }]
-};
+const Dona = () => {
+  const chartRef = useRef(null);
+  const [objetivosTotales, setObjetivosTotales] = useState([10, 20, 30, 40, 50]); // Datos iniciales de los objetivos
 
-// 3. Configura las opciones del gráfico
-const configDoughnut = {
-  // Tipo de gráfico: 'doughnut' indica un gráfico de anillo
-  type: 'doughnut',
-  // Datos definidos anteriormente
-  data: dataDoughnut,
-  // Opciones de configuración
-  options: {
-    // Hace que el gráfico sea responsivo y se ajuste al tamaño del contenedor
-    responsive: true,
-    // Configuraciones de los plugins 
-    plugins: {
-      // Configuración de la leyenda del gráfico
-      legend: {
-        // Posición de la leyenda en la parte superior
-        position: 'top',
-      },
-      // Configuración del título del gráfico
-      title: {
-        // Muestra el título
-        display: true,
-        // Texto del título
-        text: 'Gráfico de Anillo'
-      }
+  useEffect(() => {
+    // Consultar la API para obtener los objetivos totales
+    fetch("http://127.0.0.1:3009/objetivos_totales")
+      .then((res) => res.json())
+      .then((data) =>
+        setObjetivosTotales([
+          data.total_vender || 0,
+          data.total_consultar || 0,
+          data.total_agendar || 0,
+        ])
+      )
+      .catch((error) => console.error("Error al obtener objetivos:", error));
+
+    // Inicializar el gráfico solo cuando el canvas este disponible
+    if (chartRef.current) {
+      new Chart(chartRef.current.getContext("2d"), {
+        type: "doughnut",
+        data: {
+          labels: ["Vender", "Consultar", "Agendar Cita"],
+          datasets: [
+            {
+              label: "Objetivos Totales",
+              data: objetivosTotales, // Se actualiza con los datos de la API traida del Backend
+              backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
+              hoverOffset: 4,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: "top" },
+            title: { display: true, text: "Objetivos Totales" },
+          },
+        },
+      });
     }
-  },
+  }, [objetivosTotales]);
+
+  return <canvas id="doughnutChart" ref={chartRef}></canvas>;
 };
 
-export default Dona2
+export default Dona;
