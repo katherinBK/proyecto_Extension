@@ -1,9 +1,13 @@
 import React, { Suspense, useEffect } from 'react'
 import { HashRouter, Route, Routes } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-
+import Barra from './views/pages/Graficos/Barra'
+import Dona from './views/pages/Graficos/Dona'
+import Dona2 from './views/pages/Graficos/Dona2'
+import Circulo from './views/pages/Graficos/Circulo'
 import { CSpinner, useColorModes } from '@coreui/react'
 import './scss/style.scss'
+
 
 // We use those styles to show code examples, you should remove them in your application.
 import './scss/examples.scss'
@@ -16,10 +20,10 @@ const Login = React.lazy(() => import('./views/pages/login/Login'))
 const Register = React.lazy(() => import('./views/pages/register/Register'))
 const Page404 = React.lazy(() => import('./views/pages/page404/Page404'))
 const Page500 = React.lazy(() => import('./views/pages/page500/Page500'))
-const Graficos = React.lazy(() => import('./views/pages/Graficos/Barra'))
-const Graficos = React.lazy(() => import('./views/pages/Graficos/Circulo'))
-const Graficos = React.lazy(() => import('./views/pages/Graficos/Dona'))
-const Graficos = React.lazy(() => import('./views/pages/Graficos/Dona2'))
+const Graficobarra = React.lazy(() => import('./views/pages/Graficos/Barra'))
+const Graficocirculo = React.lazy(() => import('./views/pages/Graficos/Circulo'))
+const Graficodona = React.lazy(() => import('./views/pages/Graficos/Dona'))
+const Graficodona2 = React.lazy(() => import('./views/pages/Graficos/Dona2'))
 
 const TabsPillsExample = React.lazy(() => import('./Proyecto/TabsPillsExample'))
 
@@ -56,10 +60,10 @@ const App = () => {
           <Route exact path="/404" name="Page 404" element={<Page404 />} />
           <Route exact path="/500" name="Page 500" element={<Page500 />} />
 
-          <Route exact path="/Graficos" name="Barra" element={<Barra />} />
-          <Route exact path="/Graficos" name="Circulo" element={<Circulo />} />
-          <Route exact path="/Graficos" name="Dona" element={<Dona />} />
-          <Route exact path="/Graficos" name="Dona2" element={<Dona2 />} />
+          <Route exact path="/Graficobarra" name="Barra" element={<Barra />} />
+          <Route exact path="/Graficocirculo" name="Circulo" element={<Circulo />} />
+          <Route exact path="/Graficodona" name="Dona" element={<Dona />} />
+          <Route exact path="/Graficodona2" name="Dona2" element={<Dona2 />} />
           
       
           <Route exact path="/tabspills" name="TabsPills" element={<TabsPillsExample />} />
