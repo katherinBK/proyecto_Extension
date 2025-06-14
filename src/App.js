@@ -7,11 +7,8 @@ import Dona2 from './views/pages/Graficos/Dona2'
 import Circulo from './views/pages/Graficos/Circulo'
 import { CSpinner, useColorModes } from '@coreui/react'
 import './scss/style.scss'
-
-
 // We use those styles to show code examples, you should remove them in your application.
 import './scss/examples.scss'
-
 // Containers
 const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
 
@@ -20,10 +17,17 @@ const Login = React.lazy(() => import('./views/pages/login/Login'))
 const Register = React.lazy(() => import('./views/pages/register/Register'))
 const Page404 = React.lazy(() => import('./views/pages/page404/Page404'))
 const Page500 = React.lazy(() => import('./views/pages/page500/Page500'))
+
 const Graficobarra = React.lazy(() => import('./views/pages/Graficos/Barra'))
 const Graficocirculo = React.lazy(() => import('./views/pages/Graficos/Circulo'))
 const Graficodona = React.lazy(() => import('./views/pages/Graficos/Dona'))
 const Graficodona2 = React.lazy(() => import('./views/pages/Graficos/Dona2'))
+
+const GraficosBarra = React.lazy(() => import('./views/pages/Graficos/Barra'))
+const GraficosCirculo = React.lazy(() => import('./views/pages/Graficos/Circulo'))
+const GraficosDona = React.lazy(() => import('./views/pages/Graficos/Dona'))
+const GraficosDona2 = React.lazy(() => import('./views/pages/Graficos/Dona2'))
+
 
 const TabsPillsExample = React.lazy(() => import('./Proyecto/TabsPillsExample'))
 
@@ -47,13 +51,13 @@ const App = () => {
 
   return (
     <HashRouter>
-      <Suspense
+      <Suspense>
         fallback={
           <div className="pt-3 text-center">
             <CSpinner color="primary" variant="grow" />
           </div>
         }
-      >
+      
         <Routes>
           <Route exact path="/login" name="Login Page" element={<Login />} />
           <Route exact path="/register" name="Register Page" element={<Register />} />
