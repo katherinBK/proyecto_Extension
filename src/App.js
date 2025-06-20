@@ -7,16 +7,15 @@ import Dona2 from './views/pages/Graficos/Dona2'
 import Circulo from './views/pages/Graficos/Circulo'
 import { CSpinner, useColorModes } from '@coreui/react'
 import './scss/style.scss'
-// We use those styles to show code examples, you should remove them in your application.
 import './scss/examples.scss'
-// Containers
 const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
 
-// Pages
+// Paginas
 const Login = React.lazy(() => import('./views/pages/login/Login'))
 const Register = React.lazy(() => import('./views/pages/register/Register'))
 const Page404 = React.lazy(() => import('./views/pages/page404/Page404'))
 const Page500 = React.lazy(() => import('./views/pages/page500/Page500'))
+const LandingPage = React.lazy(() => import('./views/pages/LandingPage'))
 
 const Graficobarra = React.lazy(() => import('./views/pages/Graficos/Barra'))
 const Graficocirculo = React.lazy(() => import('./views/pages/Graficos/Circulo'))
@@ -51,18 +50,19 @@ const App = () => {
 
   return (
     <HashRouter>
-      <Suspense>
+      <Suspense
         fallback={
           <div className="pt-3 text-center">
             <CSpinner color="primary" variant="grow" />
           </div>
         }
-      
+      >
         <Routes>
           <Route exact path="/login" name="Login Page" element={<Login />} />
           <Route exact path="/register" name="Register Page" element={<Register />} />
           <Route exact path="/404" name="Page 404" element={<Page404 />} />
           <Route exact path="/500" name="Page 500" element={<Page500 />} />
+          <Route exact path="/landingpage" name="Landing Page" element={<LandingPage />} />
 
           <Route exact path="/Graficobarra" name="Barra" element={<Barra />} />
           <Route exact path="/Graficocirculo" name="Circulo" element={<Circulo />} />

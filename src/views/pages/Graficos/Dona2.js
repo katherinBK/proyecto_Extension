@@ -1,34 +1,63 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Chart } from "chart.js/auto";
 
-const Dona = () => {
+const Dona2 = () => {
   const chartRef = useRef(null);
-  const [objetivosTotales, setObjetivosTotales] = useState([10, 20, 30, 40, 50]); // Datos iniciales de los objetivos
+  const chartInstanceRef = useRef(null);
+  const [chartData, setChartData] = useState(null);
 
   useEffect(() => {
-    // Consultar la API para obtener los objetivos totales
-    fetch("http://127.0.0.1:3009/objetivos_totales")
+    fetch("http://127.0.0.1:3009/objetivos_cumplidos")
       .then((res) => res.json())
-      .then((data) =>
-        setObjetivosTotales([
-          data.total_vender || 0,
-          data.total_consultar || 0,
-          data.total_agendar || 0,
-        ])
-      )
-      .catch((error) => console.error("Error al obtener objetivos:", error));
+      .then((data) => {
+        if (data) {
+          const labels = [];
+          const values = [];
+          const backgroundColors = [];
+          let colorIndex = 0;
 
-    // Inicializar el gráfico solo cuando el canvas este disponible
-    if (chartRef.current) {
-      new Chart(chartRef.current.getContext("2d"), {
+          const processData = (source, prefix, colorOffset) => {
+            Object.entries(source).forEach(([key, value]) => {
+              labels.push(`${prefix}: ${key}`);
+              values.push(value);
+              backgroundColors.push(`hsl(${(colorIndex * 60 + colorOffset) % 360}, 70%, 50%)`);
+              colorIndex++;
+            });
+          };
+
+          if (data.vender && data.vender.por_producto) {
+            processData(data.vender.por_producto, 'Venta', 0);
+          }
+          if (data.consultar && data.consultar.por_tipo) {
+            processData(data.consultar.por_tipo, 'Consulta', 120);
+          }
+          if (data.agendar_cita && data.agendar_cita.por_fecha) {
+            processData(data.agendar_cita.por_fecha, 'Cita', 240);
+          }
+
+          if (values.length > 0) {
+            setChartData({ labels, values, backgroundColors });
+          }
+        }
+      })
+      .catch((error) => console.error("Error al obtener objetivos cumplidos:", error));
+  }, []);
+
+  useEffect(() => {
+    if (chartRef.current && chartData) {
+      if (chartInstanceRef.current) {
+        chartInstanceRef.current.destroy();
+      }
+
+      chartInstanceRef.current = new Chart(chartRef.current, {
         type: "doughnut",
         data: {
-          labels: ["Vender", "Consultar", "Agendar Cita"],
+          labels: chartData.labels,
           datasets: [
             {
-              label: "Objetivos Totales",
-              data: objetivosTotales, // Se actualiza con los datos de la API traida del Backend
-              backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
+              label: "Objetivos Cumplidos por Detalle",
+              data: chartData.values,
+              backgroundColor: chartData.backgroundColors,
               hoverOffset: 4,
             },
           ],
@@ -36,15 +65,35 @@ const Dona = () => {
         options: {
           responsive: true,
           plugins: {
-            legend: { position: "top" },
-            title: { display: true, text: "Objetivos Totales" },
+            legend: {
+              position: "right",
+              labels: {
+                boxWidth: 15,
+                padding: 15,
+              },
+            },
+            title: {
+              display: true,
+              text: "Desglose de Objetivos Cumplidos",
+            },
           },
         },
       });
     }
-  }, [objetivosTotales]);
 
-  return <canvas id="doughnutChart" ref={chartRef}></canvas>;
+    return () => {
+      if (chartInstanceRef.current) {
+        chartInstanceRef.current.destroy();
+        chartInstanceRef.current = null;
+      }
+    };
+  }, [chartData]);
+  
+  if (!chartData) {
+    return <div style={{ textAlign: 'center', padding: '20px', color: '#888' }}>No hay datos de objetivos cumplidos para mostrar.</div>;
+  }
+
+  return <canvas ref={chartRef}></canvas>;
 };
 
-export default Dona;
+export default Dona2;

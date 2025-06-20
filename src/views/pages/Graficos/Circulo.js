@@ -3,26 +3,35 @@ import { Chart } from "chart.js/auto";
 
 const Circulo = () => {
   const chartRef = useRef(null);
-  const [mensajesTotales, setMensajesTotales] = useState([12, 19, 3, 5, 2]); // Datos iniciales
+  const chartInstanceRef = useRef(null);
+  const [chartData, setChartData] = useState(null);
 
   useEffect(() => {
-    // Consultar la API para obtener la totalidad de mensajes enviados
     fetch("http://127.0.0.1:3009/mensajes_totales")
       .then((res) => res.json())
-      .then((data) => setMensajesTotales(data.mensajes || [12, 19, 3, 5, 2]))
+      .then((data) => {
+        if (data && data.mensajes && data.labels) {
+          setChartData(data);
+        }
+      })
       .catch((error) => console.error("Error al obtener mensajes:", error));
+  }, []);
 
-    // Inicializar el gráfico solo cuando el canvas esté disponible
-    if (chartRef.current) {
-      new Chart(chartRef.current.getContext("2d"), {
+  useEffect(() => {
+    if (chartRef.current && chartData && chartData.mensajes.some(v => v > 0)) {
+      if (chartInstanceRef.current) {
+        chartInstanceRef.current.destroy();
+      }
+
+      chartInstanceRef.current = new Chart(chartRef.current, {
         type: "pie",
         data: {
-          labels: ["Rojo", "Azul", "Amarillo", "Verde", "Púrpura"],
+          labels: chartData.labels,
           datasets: [
             {
               label: "Mensajes Totales",
-              data: mensajesTotales, //  Se actualiza con los datos de la API
-              backgroundColor: ["#800000", "#000080", "#808000", "#008000", "#800080"],
+              data: chartData.mensajes,
+              backgroundColor: ["#36A2EB", "#FF6384"],
               hoverOffset: 4,
             },
           ],
@@ -31,14 +40,25 @@ const Circulo = () => {
           responsive: true,
           plugins: {
             legend: { position: "top" },
-            title: { display: true, text: "Distribución de Mensajes Totales" },
+            title: { display: true, text: "Distribución de Mensajes" },
           },
         },
       });
     }
-  }, [mensajesTotales]);
+    
+    return () => {
+      if (chartInstanceRef.current) {
+        chartInstanceRef.current.destroy();
+        chartInstanceRef.current = null;
+      }
+    };
+  }, [chartData]);
 
-  return <canvas id="pieChart" ref={chartRef}></canvas>;
+  if (!chartData || !chartData.mensajes.some(v => v > 0)) {
+    return <div style={{ textAlign: 'center', padding: '20px', color: '#888' }}>No hay datos de mensajes para mostrar.</div>;
+  }
+
+  return <canvas ref={chartRef}></canvas>;
 };
 
 export default Circulo;
